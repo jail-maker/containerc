@@ -21,6 +21,7 @@ class CopyCommand extends CommandInterface {
         let {
             dataset,
             datasetPath,
+            rootFSPath,
             index,
             manifest,
             context,
@@ -33,7 +34,7 @@ class CopyCommand extends CommandInterface {
         let [src, dst] = args;
 
         src = path.join(context, path.resolve('/', src));
-        dst = path.join(datasetPath, path.resolve(manifest.workdir, dst));
+        dst = path.join(rootFSPath, path.resolve(manifest.workdir, dst));
 
         copySync(src, dst);
         this._copiedFile = dst;

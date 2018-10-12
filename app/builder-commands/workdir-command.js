@@ -13,7 +13,7 @@ class WorkdirCommand extends CommandInterface {
         super();
 
         this._receiver = receiver;
-        this._commitName= null;
+        this._commitName = null;
 
     }
 
@@ -22,13 +22,14 @@ class WorkdirCommand extends CommandInterface {
         let {
             dataset,
             datasetPath,
+            rootFSPath,
             index,
             manifest,
             args = [],
         } = this._receiver;
 
         let workdir = path.resolve(manifest.workdir, args);
-        let dir = path.join(datasetPath, workdir);
+        let dir = path.join(rootFSPath, workdir);
 
         this._commitName = uuidv5(index + ' ' + dir, uuidv5.DNS);
         zfs.snapshot(dataset, this._commitName);

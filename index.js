@@ -50,8 +50,7 @@ const argv = yargs
 
     if (zfs.has(newDataset) && !argv.force) {
 
-        let message = `dataset "${manifest.name}"
-        already exists, use -f for force create.`;
+        let message = `dataset "${manifest.name}" already exists, use -f for force create.`;
 
         throw new Error(message);
 
@@ -120,10 +119,13 @@ const argv = yargs
 
     });
 
+    let rootFSPath = path.join(datasetPath, 'rootfs');
+    let fromRootFSPath = path.join(fromDatasetPath, 'rootfs');
+
     let manifestOutPath = path.join(datasetPath, MANIFEST_NAME);
     let fromManifestOutPath = path.join(fromDatasetPath, MANIFEST_NAME);
     let srcContextPath = path.resolve(argv.context);
-    let contextPath = path.join(datasetPath, '/media/context');
+    let contextPath = path.join(rootFSPath, '/media/context');
     let jailConfigFile = Jail.confFileByName(manifest.name);
     let fromManifest = await submitOrUndoAll(_ => {
         return ManifestFactory.fromJsonFile(fromManifestOutPath);
@@ -149,7 +151,7 @@ const argv = yargs
     rules['ip6.addr'] = [];
     rules.ip4 = "inherit";
     rules.ip6 = "inherit";
-    rules.path = datasetPath;
+    rules.path = rootFSPath;
 
     let jailConfig = new JailConfig(manifest.name, rules);
     jailConfig.accept(ruleViewVisitor);
@@ -175,6 +177,7 @@ const argv = yargs
             index: 0,
             dataset: newDataset,
             datasetPath,
+            rootFSPath,
             context: contextPath,
             manifest,
             args: manifest.workdir,
@@ -197,6 +200,7 @@ const argv = yargs
             index,
             dataset: newDataset,
             datasetPath,
+            rootFSPath,
             context: contextPath,
             manifest,
             args,

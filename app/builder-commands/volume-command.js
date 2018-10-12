@@ -41,6 +41,7 @@ class VolumeCommand extends CommandInterface {
         let {
             dataset,
             datasetPath,
+            rootFSPath,
             manifest,
             args = {},
         } = this._receiver;
@@ -59,7 +60,7 @@ class VolumeCommand extends CommandInterface {
 
         let dst = args.to;
         dst = path.resolve(manifest.workdir, dst);
-        let mountPath = path.join(datasetPath, dst);
+        let mountPath = path.join(rootFSPath, dst);
         let volumeDataset = path.join(config.volumesLocation, args.name);
         let src = null;
 
